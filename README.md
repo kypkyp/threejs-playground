@@ -1,4 +1,8 @@
 # threejs-playground
+## これは何
+- three.jsで色々実験する用のレポジトリです。
+- ひとまずは[初めてのThree.js 第2版](https://www.amazon.co.jp/dp/4873117704)の中身をやります。
+- ルーティングとか諸々考えるのがめんどくさかったのでnuxt入れました。便利だね……
 
 ## Build Setup
 
