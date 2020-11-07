@@ -15,10 +15,8 @@ module.exports = {
     'plugin:nuxt/recommended',
   ],
   plugins: ['prettier'],
-  // add your custom rules here
   rules: {
-    tabWidth: 2,
-    semi: true,
-    singleQuote: true
+    'unicorn/number-literal-case': 'off',
   },
-}
+  // add your custom rules here
+};
