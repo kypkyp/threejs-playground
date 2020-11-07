@@ -23,7 +23,13 @@ export default {
     stats.domElement.style.top = '0px';
     document.body.appendChild(stats.dom);
 
-    return { scene, camera, renderer, stats };
+    const cubeGeometry = new THREE.BoxGeometry(4, 4, 4);
+    const cubeMaterial = new THREE.MeshLambertMaterial({
+      color: 0xff0000,
+    });
+    const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+
+    return { scene, camera, renderer, stats, cube };
   },
   mounted() {
     this.renderer = new THREE.WebGLRenderer({
@@ -57,18 +63,12 @@ export default {
 
     this.scene.add(plane);
 
-    const cubeGeometry = new THREE.BoxGeometry(4, 4, 4);
-    const cubeMaterial = new THREE.MeshLambertMaterial({
-      color: 0xff0000,
-    });
-    const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+    this.cube.position.x = -4;
+    this.cube.position.y = 3;
+    this.cube.position.z = 0;
+    this.cube.castShadow = true;
 
-    cube.position.x = -4;
-    cube.position.y = 3;
-    cube.position.z = 0;
-    cube.castShadow = true;
-
-    this.scene.add(cube);
+    this.scene.add(this.cube);
 
     const sphereGeometry = new THREE.SphereGeometry(4, 20, 20);
     const sphereMaterial = new THREE.MeshLambertMaterial({
@@ -93,6 +93,11 @@ export default {
   methods: {
     renderScene() {
       this.stats.update();
+
+      this.cube.rotation.x += 0.02;
+      this.cube.rotation.y += 0.02;
+      this.cube.rotation.z += 0.02;
+
       requestAnimationFrame(this.renderScene);
       this.renderer.render(this.scene, this.camera);
     },
