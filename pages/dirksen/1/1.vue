@@ -4,9 +4,10 @@
 
 <script>
 import * as THREE from 'three';
+import Stats from 'three/examples/jsm/libs/stats.module';
 
 export default {
-  mounted() {
+  data() {
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(
       45,
@@ -14,24 +15,35 @@ export default {
       0.1,
       1000
     );
-    const renderer = new THREE.WebGLRenderer({
+    const renderer = null;
+    const stats = new Stats();
+    stats.setMode(0);
+    stats.domElement.style.position = 'absolute';
+    stats.domElement.style.left = '0px';
+    stats.domElement.style.top = '0px';
+    document.body.appendChild(stats.dom);
+
+    return { scene, camera, renderer, stats };
+  },
+  mounted() {
+    this.renderer = new THREE.WebGLRenderer({
       canvas: document.getElementById('threeCanvas'),
     });
-    renderer.setClearColor(new THREE.Color(0xeeeeee));
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMapType = THREE.PCFSoftShadowMap;
+    this.renderer.setClearColor(new THREE.Color(0xeeeeee));
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
+    this.renderer.setPixelRatio(window.devicePixelRatio);
+    this.renderer.shadowMap.enabled = true;
+    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
     const axes = new THREE.AxesHelper(20);
-    scene.add(axes);
+    this.scene.add(axes);
 
     const spotLight = new THREE.SpotLight(0xffffff);
     spotLight.position.set(-20, 30, -5);
     spotLight.castShadow = true;
     spotLight.shadow.mapSize.width = 1024;
     spotLight.shadow.mapSize.height = 1024;
-    scene.add(spotLight);
+    this.scene.add(spotLight);
 
     const planeGeometry = new THREE.PlaneGeometry(60, 20);
     const planeMaterial = new THREE.MeshLambertMaterial({ color: 0xcccccc });
@@ -43,7 +55,7 @@ export default {
     plane.position.z = 0;
     plane.receiveShadow = true;
 
-    scene.add(plane);
+    this.scene.add(plane);
 
     const cubeGeometry = new THREE.BoxGeometry(4, 4, 4);
     const cubeMaterial = new THREE.MeshLambertMaterial({
@@ -56,7 +68,7 @@ export default {
     cube.position.z = 0;
     cube.castShadow = true;
 
-    scene.add(cube);
+    this.scene.add(cube);
 
     const sphereGeometry = new THREE.SphereGeometry(4, 20, 20);
     const sphereMaterial = new THREE.MeshLambertMaterial({
@@ -69,14 +81,21 @@ export default {
     sphere.position.z = 2;
     sphere.castShadow = true;
 
-    scene.add(sphere);
+    this.scene.add(sphere);
 
-    camera.position.x = -30;
-    camera.position.y = 40;
-    camera.position.z = 30;
-    camera.lookAt(scene.position);
+    this.camera.position.x = -30;
+    this.camera.position.y = 40;
+    this.camera.position.z = 30;
+    this.camera.lookAt(this.scene.position);
 
-    renderer.render(scene, camera);
+    this.renderScene();
+  },
+  methods: {
+    renderScene() {
+      this.stats.update();
+      requestAnimationFrame(this.renderScene);
+      this.renderer.render(this.scene, this.camera);
+    },
   },
 };
 </script>
