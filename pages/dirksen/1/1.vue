@@ -37,7 +37,20 @@ export default {
 
     const step = 0;
 
-    return { scene, camera, renderer, stats, cube, sphere, step };
+    const rotationSpeed = 0.02;
+    const bouncingSpeed = 0.03;
+
+    return {
+      scene,
+      camera,
+      renderer,
+      stats,
+      cube,
+      sphere,
+      step,
+      rotationSpeed,
+      bouncingSpeed,
+    };
   },
   mounted() {
     this.renderer = new THREE.WebGLRenderer({
@@ -91,21 +104,29 @@ export default {
     this.camera.lookAt(this.scene.position);
 
     this.renderScene();
+
+    window.addEventListener('resize', this.onResize, false);
   },
   methods: {
     renderScene() {
       this.stats.update();
 
-      this.cube.rotation.x += 0.02;
-      this.cube.rotation.y += 0.02;
-      this.cube.rotation.z += 0.02;
+      this.cube.rotation.x += this.rotationSpeed;
+      this.cube.rotation.y += this.rotationSpeed;
+      this.cube.rotation.z += this.rotationSpeed;
 
-      this.step += 0.04;
+      this.step += this.bouncingSpeed;
       this.sphere.position.x = 20 + 10 * Math.cos(this.step);
       this.sphere.position.y = 2 + 10 * Math.abs(Math.sin(this.step));
 
       requestAnimationFrame(this.renderScene);
       this.renderer.render(this.scene, this.camera);
+    },
+    onResize() {
+      this.camera.aspect = window.innerWidth / window.innerHeight;
+      this.camera.updateProjectionMatrix();
+      this.renderer.setSize(window.innerWidth, window.innerHeight);
+      this.renderer.setPixelRatio(window.devicePixelRatio);
     },
   },
 };
