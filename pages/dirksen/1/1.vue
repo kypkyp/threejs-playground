@@ -29,7 +29,15 @@ export default {
     });
     const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
 
-    return { scene, camera, renderer, stats, cube };
+    const sphereGeometry = new THREE.SphereGeometry(4, 20, 20);
+    const sphereMaterial = new THREE.MeshLambertMaterial({
+      color: 0x7777ff,
+    });
+    const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+
+    const step = 0;
+
+    return { scene, camera, renderer, stats, cube, sphere, step };
   },
   mounted() {
     this.renderer = new THREE.WebGLRenderer({
@@ -70,18 +78,12 @@ export default {
 
     this.scene.add(this.cube);
 
-    const sphereGeometry = new THREE.SphereGeometry(4, 20, 20);
-    const sphereMaterial = new THREE.MeshLambertMaterial({
-      color: 0x7777ff,
-    });
-    const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+    this.sphere.position.x = 20;
+    this.sphere.position.y = 4;
+    this.sphere.position.z = 2;
+    this.sphere.castShadow = true;
 
-    sphere.position.x = 20;
-    sphere.position.y = 4;
-    sphere.position.z = 2;
-    sphere.castShadow = true;
-
-    this.scene.add(sphere);
+    this.scene.add(this.sphere);
 
     this.camera.position.x = -30;
     this.camera.position.y = 40;
@@ -97,6 +99,10 @@ export default {
       this.cube.rotation.x += 0.02;
       this.cube.rotation.y += 0.02;
       this.cube.rotation.z += 0.02;
+
+      this.step += 0.04;
+      this.sphere.position.x = 20 + 10 * Math.cos(this.step);
+      this.sphere.position.y = 2 + 10 * Math.abs(Math.sin(this.step));
 
       requestAnimationFrame(this.renderScene);
       this.renderer.render(this.scene, this.camera);
