@@ -4,6 +4,7 @@
 
 <script>
 import * as THREE from 'three';
+import Tweakpane from 'tweakpane';
 import Stats from 'three/examples/jsm/libs/stats.module';
 
 export default {
@@ -37,8 +38,13 @@ export default {
 
     const step = 0;
 
-    const rotationSpeed = 0.02;
-    const bouncingSpeed = 0.03;
+    const pane = new Tweakpane();
+    const params = {
+      rotationSpeed: 0.02,
+      bouncingSpeed: 0.03,
+    };
+    pane.addInput(params, 'rotationSpeed', { min: 0, max: 0.5 });
+    pane.addInput(params, 'bouncingSpeed', { min: 0, max: 0.5 });
 
     return {
       scene,
@@ -48,8 +54,8 @@ export default {
       cube,
       sphere,
       step,
-      rotationSpeed,
-      bouncingSpeed,
+      params,
+      pane,
     };
   },
   mounted() {
@@ -111,11 +117,11 @@ export default {
     renderScene() {
       this.stats.update();
 
-      this.cube.rotation.x += this.rotationSpeed;
-      this.cube.rotation.y += this.rotationSpeed;
-      this.cube.rotation.z += this.rotationSpeed;
+      this.cube.rotation.x += this.params.rotationSpeed;
+      this.cube.rotation.y += this.params.rotationSpeed;
+      this.cube.rotation.z += this.params.rotationSpeed;
 
-      this.step += this.bouncingSpeed;
+      this.step += this.params.bouncingSpeed;
       this.sphere.position.x = 20 + 10 * Math.cos(this.step);
       this.sphere.position.y = 2 + 10 * Math.abs(Math.sin(this.step));
 
