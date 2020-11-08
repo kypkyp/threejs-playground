@@ -37,7 +37,7 @@ export default {
       min: 0,
       max: 0.5,
     });
-    pane.addInput(params, 'numberOfObjects');
+    pane.addMonitor(params, 'numberOfObjects');
     pane
       .addButton({
         title: 'addCube',
@@ -79,7 +79,11 @@ export default {
     const spotLight = new THREE.SpotLight(0xffffff);
     spotLight.position.set(-20, 30, -5);
     spotLight.castShadow = true;
+    spotLight.shadow.mapSize.width = 1024;
+    spotLight.shadow.mapSize.height = 1024;
     this.scene.add(spotLight);
+
+    this.params.numberOfObjects = this.scene.children.length;
 
     document
       .getElementById('threeCanvas')
@@ -107,7 +111,7 @@ export default {
       const lastObject = allChildren[allChildren.length - 1];
       if (lastObject instanceof THREE.Mesh) {
         this.scene.remove(lastObject);
-        this.numberOfObjects = this.scene.children.length;
+        this.params.numberOfObjects = this.scene.children.length;
       }
     },
     addCube() {
@@ -127,7 +131,7 @@ export default {
         -20 + Math.round(Math.random() * this.plane.geometry.parameters.height);
 
       this.scene.add(cube);
-      this.numberOfObjects = this.scene.childrenLength;
+      this.params.numberOfObjects = this.scene.children.length;
     },
     outputObjects() {
       console.log(this.scene.children);
